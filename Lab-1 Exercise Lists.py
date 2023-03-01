@@ -3,6 +3,7 @@ print(dir(list))
 print("\nHelp Lists:",help(list.reverse))
 
 print("x==========x==========x==========x\n")
+#List of Word
 stringWords = []
 n = 4;count = 0
 print("Please enter 4 words:")

@@ -2,13 +2,14 @@ from com.agent import Agent
 from com.environment import Environment 
 from com.environment import Room 
 
-class TwoRoomVaccumCleanerEnvironment(Environment.Environment):
+class ThreeRoomVaccumCleanerEnvironment(Environment.Environment):
     ''' classdocs ''' 
     def __init__(self, agent,rooms = 2):
         '''Constructor '''
 
         self.r1 = Room.Room('A','dirty') 
         self.r2 = Room.Room('B','dirty')
+        self.r3 = Room.Room('C','dirty')
 
         self.agent = agent 
         self.currentRoom = self.r1 
@@ -16,7 +17,7 @@ class TwoRoomVaccumCleanerEnvironment(Environment.Environment):
         self.step = 1 
         self.action = ""
 
-    def executeStep(self,n=2): 
+    def executeStep(self,n=1): 
         for _ in range(0,n):
             self.displayPerception() 
             self.agent.sense(self) 
@@ -28,9 +29,12 @@ class TwoRoomVaccumCleanerEnvironment(Environment.Environment):
             elif res == 'right':
                 if(self.currentRoom.location == self.r1.location):
                     self.currentRoom = self.r2
+                if(self.currentRoom.location == self.r3.location):
+                    self.currentRoom = self.r1
             elif res == "left":
                 if(self.currentRoom.location == self.r2.location):
-                    self.currentRoom = self.r1
+                    self.currentRoom = self.r3
+
             self.displayAction()
             self.step += 1
 
@@ -62,21 +66,20 @@ class VaccumAgent(Agent.Agent):
             return 'right'
         if self.environment.currentRoom.location == 'B': 
             return 'left'
+        if self.environment.currentRoom.location == 'C':
+            return 'right'
         return 'left'
 
-    def displayPerception(self):
-        print("Perception at step %d is [%s,%s]"%(self.step,self.step,self.currentRoom))
-
 def checkInput(x):
-    if x <= 2:
-        x = int(input("Enter number greater than 2: "))
+    if x <= 10:
+        x = int(input("Enter number greater than 10: "))
         return checkInput(x)
     else:
         return x
 
 if __name__ == '__main__':
-    x = int(input("Enter Steps of Executions, it should be greater than 2: "))
-    s = checkInput(x)
+    x = int(input("Enter Steps of Executions, it should be greater than 10: "))
+    s = checkInput(x) 
     vcagent = VaccumAgent() 
-    env = TwoRoomVaccumCleanerEnvironment(vcagent) 
+    env = ThreeRoomVaccumCleanerEnvironment(vcagent) 
     env.executeStep(s)
